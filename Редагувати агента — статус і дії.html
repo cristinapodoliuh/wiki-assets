@@ -1,0 +1,326 @@
+<!DOCTYPE html>
+<!-- saved from url=(0081)file:///Users/CristinaPodoliuh/Downloads/Agent%20Edit%20Modal%20_standalone_.html -->
+<html lang="uk"><head><meta http-equiv="Content-Type" content="text/html; charset=UTF-8"><script>window.__resources = {};</script>
+
+<title>Редагувати агента — статус і дії</title>
+<script src="blob:null/c32462c2-7ac1-40e3-93fe-220ccb066bac"></script>
+
+<style>
+  /* ---- compiled from agent-edit-modal.scss (see file in project) ---- */
+  :root{
+    --c-text:#2b2f36;
+    --c-text-muted:#6b7280;
+    --c-label:#3a3f47;
+    --c-border:#e2e5ea;
+    --c-border-strong:#cdd3da;
+    --c-disabled-bg:#ccd4dc;
+    --c-disabled-text:#3a3f47;
+    --c-primary:#2196f3;
+    --c-primary-hover:#1e88e5;
+    --c-primary-press:#1976d2;
+    --c-bg:#ffffff;
+    --c-page-bg:#eef1f4;
+    --c-divider:#e8ebef;
+
+    --s-green:#16a34a;
+    --s-green-bg:#e8f7ee;
+    --s-amber:#f59e0b;
+    --s-amber-bg:#fef4e3;
+    --s-yellow:#ca8a04;
+    --s-yellow-bg:#fdf6dc;
+    --s-red:#dc2626;
+    --s-red-bg:#fdecec;
+
+    --radius:4px;
+    --radius-lg:6px;
+    --font: "Helvetica Neue", Helvetica, Arial, "PT Sans", sans-serif;
+  }
+  *{box-sizing:border-box}
+  html,body{margin:0;padding:0;background:var(--c-page-bg);font-family:var(--font);color:var(--c-text);min-height:100vh}
+  body{display:flex;justify-content:center;align-items:flex-start;padding:48px 16px 96px}
+
+  /* ---------- Modal ---------- */
+  .modal{
+    width:552px;max-width:100%;background:var(--c-bg);border-radius:6px;
+    box-shadow:0 12px 40px rgba(20,28,40,.18), 0 2px 6px rgba(20,28,40,.06);
+    padding:24px 28px 22px;position:relative;
+  }
+  .modal__header{
+    display:flex;align-items:flex-start;justify-content:space-between;gap:12px;margin-bottom:14px;
+  }
+  .modal__title{font-size:18px;font-weight:700;line-height:1.3;letter-spacing:-.01em}
+  .modal__close{
+    background:none;border:0;cursor:pointer;color:#5a6068;padding:4px;margin:-4px;
+    display:inline-flex;align-items:center;justify-content:center;border-radius:4px;
+  }
+  .modal__close:hover{background:#f1f3f6;color:#2b2f36}
+
+  /* ---------- Tabs ---------- */
+  .tabs{display:flex;gap:24px;border-bottom:1px solid var(--c-divider);margin:0 -28px 18px;padding:0 28px}
+  .tab{
+    background:none;border:0;cursor:pointer;font:inherit;font-size:14px;color:#6b7280;
+    padding:6px 0 10px;position:relative;letter-spacing:.01em;
+  }
+  .tab:hover{color:#2b2f36}
+  .tab--active{color:var(--c-primary);font-weight:500}
+  .tab--active::after{
+    content:"";position:absolute;left:0;right:0;bottom:-1px;height:2px;background:var(--c-primary);border-radius:2px 2px 0 0;
+  }
+
+  /* ---------- Status row ---------- */
+  .status-row{
+    display:flex;align-items:flex-start;gap:12px;flex-wrap:wrap;
+    padding:12px 14px;background:#f7f9fb;border:1px solid var(--c-divider);
+    border-radius:var(--radius-lg);margin-bottom:18px;
+  }
+  .status-row__main{display:flex;flex-direction:column;gap:6px;min-width:0;flex:1 1 180px}
+  .status-row__label{font-size:12px;color:var(--c-text-muted);letter-spacing:.02em;text-transform:uppercase;font-weight:500}
+  .status-row__actions{display:flex;align-items:center;gap:8px;margin-top:22px;margin-left:auto}
+  .status-row__actions .btn-ghost{width:max-content}
+
+  .status-chip{
+    display:inline-flex;align-items:center;gap:8px;padding:6px 12px;border-radius:999px;
+    font-size:13px;font-weight:500;line-height:1;border:1px solid transparent;width:max-content;
+  }
+  .status-chip__dot{width:8px;height:8px;border-radius:50%;flex:0 0 auto;box-shadow:0 0 0 3px rgba(0,0,0,.04)}
+  .status-chip--active{background:var(--s-green-bg);color:var(--s-green);border-color:rgba(22,163,74,.18)}
+  .status-chip--active .status-chip__dot{background:var(--s-green)}
+  .status-chip--pending{background:var(--s-amber-bg);color:#a35e00;border-color:rgba(245,158,11,.22)}
+  .status-chip--pending .status-chip__dot{background:var(--s-amber)}
+  .status-chip--password{background:var(--s-yellow-bg);color:#8a6200;border-color:rgba(202,138,4,.25)}
+  .status-chip--password .status-chip__dot{background:var(--s-yellow)}
+  .status-chip--blocked{background:var(--s-red-bg);color:#b91c1c;border-color:rgba(220,38,38,.22)}
+  .status-chip--blocked .status-chip__dot{background:var(--s-red)}
+
+  /* ---------- Status buttons ---------- */
+  .btn-ghost{
+    display:inline-flex;align-items:center;gap:6px;
+    background:#fff;border:1px solid var(--c-border-strong);color:#2b2f36;
+    border-radius:var(--radius);padding:7px 12px;font:inherit;font-size:13px;cursor:pointer;line-height:1;
+    transition:background .12s ease,border-color .12s ease,color .12s ease;
+  }
+  .btn-ghost:hover{background:#f5f7fa;border-color:#b6bdc6}
+  .btn-ghost:active{background:#eceff3}
+  .btn-ghost svg{flex:0 0 auto}
+
+  .btn-ghost--danger{color:#b91c1c;border-color:#f0c2c2}
+  .btn-ghost--danger:hover{background:#fdf3f3;border-color:#e6a3a3}
+
+  .btn-ghost--success{color:#15803d;border-color:#b9e2c7}
+  .btn-ghost--success:hover{background:#eef9f2;border-color:#94d2ad}
+
+  /* ---------- Icon action buttons (tinted-fill style) ---------- */
+  .action-icons{display:inline-flex;align-items:center;gap:8px}
+  .icon-btn{
+    width:28px;height:28px;display:inline-flex;align-items:center;justify-content:center;
+    background:transparent;border:0;border-radius:6px;
+    color:#3a3f47;cursor:pointer;padding:0;position:relative;
+    transition:background .12s ease,color .12s ease,box-shadow .12s ease,filter .12s ease;
+  }
+  .icon-btn:focus-visible{outline:none;box-shadow:0 0 0 3px rgba(33,150,243,.22)}
+  .icon-btn:disabled{opacity:.55;cursor:not-allowed}
+  .icon-btn svg{display:block}
+
+  /* Send email — light blue fill */
+  .icon-btn--info{background:#e8f1fd;color:#2196f3}
+  .icon-btn--info:hover{background:#d6e6fa}
+  .icon-btn--info:active{background:#c5dbf6}
+
+  /* Block — light pink fill, red icon */
+  .icon-btn--danger{background:#fdecec;color:#dc2626}
+  .icon-btn--danger:hover{background:#fbdada}
+  .icon-btn--danger:active{background:#f6c8c8}
+
+  /* Unblock — light green fill */
+  .icon-btn--success{background:#e7f6ec;color:#15803d}
+  .icon-btn--success:hover{background:#d5eedd}
+
+  /* Tooltip — white text on black, no icon */
+  .tip-wrap{position:relative;display:inline-flex}
+  .tip{
+    position:absolute;left:50%;bottom:calc(100% + 8px);transform:translateX(-50%) translateY(4px);
+    display:inline-flex;align-items:center;
+    background:#1f2329;border-radius:4px;
+    padding:6px 10px;font-size:12px;color:#fff;line-height:1.2;white-space:nowrap;
+    box-shadow:0 4px 12px rgba(0,0,0,.18);
+    opacity:0;pointer-events:none;visibility:hidden;
+    transition:opacity .14s ease,transform .14s ease,visibility .14s;
+    z-index:5;
+  }
+  .tip::after{
+    content:"";position:absolute;left:50%;top:100%;transform:translateX(-50%) translateY(-3px) rotate(45deg);
+    width:6px;height:6px;background:#1f2329;
+  }
+  .tip-wrap:hover .tip,
+  .tip-wrap:focus-within .tip{
+    opacity:1;visibility:visible;transform:translateX(-50%) translateY(0);
+  }
+
+  /* ---------- Form ---------- */
+  .form-group{display:flex;flex-direction:column;gap:6px;margin-bottom:14px}
+  .form-group__label{font-size:13px;color:var(--c-label);font-weight:400}
+  .input,.select{
+    width:100%;height:36px;background:#fff;border:1px solid var(--c-border);border-radius:var(--radius);
+    padding:0 12px;font:inherit;font-size:14px;color:var(--c-text);outline:none;
+    transition:border-color .12s ease,box-shadow .12s ease;
+  }
+  .input:focus,.select:focus{border-color:var(--c-primary);box-shadow:0 0 0 3px rgba(33,150,243,.15)}
+  .input--disabled,.select--disabled{
+    background:var(--c-disabled-bg);color:var(--c-disabled-text);border-color:transparent;cursor:not-allowed;
+  }
+  .select-wrap{position:relative}
+  .select-wrap::after{
+    content:"";position:absolute;right:12px;top:50%;width:8px;height:8px;
+    border-right:1.5px solid #5a6068;border-bottom:1.5px solid #5a6068;
+    transform:translateY(-70%) rotate(45deg);pointer-events:none;
+  }
+  .select{appearance:none;-webkit-appearance:none;padding-right:32px;background-image:none}
+
+  .divider{height:1px;background:var(--c-divider);margin:6px -28px 16px}
+
+  /* ---------- Primary actions ---------- */
+  .modal__footer{display:flex;align-items:center;gap:14px;margin-top:6px}
+  .btn-primary{
+    background:var(--c-primary);color:#fff;border:0;border-radius:var(--radius);
+    padding:0 16px;height:36px;font:inherit;font-size:14px;font-weight:500;cursor:pointer;
+    transition:background .12s ease;
+  }
+  .btn-primary:hover{background:var(--c-primary-hover)}
+  .btn-primary:active{background:var(--c-primary-press)}
+  .btn-link{background:none;border:0;color:var(--c-primary);font:inherit;font-size:14px;cursor:pointer;padding:8px 4px}
+  .btn-link:hover{text-decoration:underline}
+
+  /* ---------- Toast ---------- */
+  .toast-wrap{
+    position:fixed;top:24px;left:50%;transform:translateX(-50%);
+    display:flex;flex-direction:column;gap:8px;z-index:1000;align-items:center;pointer-events:none;
+  }
+  .toast{
+    background:#2b2b2b;color:#fff;padding:12px 20px;border-radius:6px;font-size:14px;font-weight:400;
+    box-shadow:0 8px 24px rgba(0,0,0,.18);display:inline-flex;align-items:center;justify-content:center;
+    animation:toastIn .2s ease;pointer-events:auto;
+  }
+  @keyframes toastIn{from{transform:translateY(-8px);opacity:0}to{transform:none;opacity:1}}
+
+  /* ---------- Demo controls (poza modaln. vikna) ---------- */
+  .demo-panel{
+    position:fixed;left:20px;top:20px;background:#fff;border:1px solid var(--c-divider);
+    border-radius:8px;padding:14px 16px;box-shadow:0 8px 24px rgba(20,28,40,.08);
+    font-size:13px;color:var(--c-text);width:220px;
+  }
+  .demo-panel h3{margin:0 0 10px;font-size:12px;text-transform:uppercase;letter-spacing:.06em;color:#6b7280;font-weight:600}
+  .demo-panel__row{display:flex;flex-direction:column;gap:6px}
+  .demo-panel__btn{
+    text-align:left;background:#f4f6f8;border:1px solid transparent;border-radius:5px;
+    padding:8px 10px;font:inherit;font-size:13px;cursor:pointer;display:flex;align-items:center;gap:8px;color:#2b2f36;
+  }
+  .demo-panel__btn:hover{background:#eaeef2}
+  .demo-panel__btn--on{background:#e8f3ff;border-color:#a9d3f5;color:#0a5bb0}
+  .demo-panel__dot{width:8px;height:8px;border-radius:50%}
+  .demo-panel small{display:block;color:#9aa0a8;margin-top:10px;font-size:11px;line-height:1.4}
+</style>
+</head>
+<body>
+
+<div id="app"><aside aria-label="Демо-перемикач статусу" class="demo-panel"><h3>Статус агента (демо)</h3> <div class="demo-panel__row"><button class="demo-panel__btn"><span class="demo-panel__dot" style="background: rgb(245, 158, 11);"></span>
+        Не активований
+      </button><button class="demo-panel__btn demo-panel__btn--on"><span class="demo-panel__dot" style="background: rgb(22, 163, 74);"></span>
+        Активний
+      </button><button class="demo-panel__btn"><span class="demo-panel__dot" style="background: rgb(220, 38, 38);"></span>
+        Заблокований
+      </button><button class="demo-panel__btn"><span class="demo-panel__dot" style="background: rgb(202, 138, 4);"></span>
+        Потребує зміни пароля
+      </button></div> <small>Перемкніть стан, щоб побачити які кнопки доступні.</small></aside> <div role="dialog" aria-modal="true" aria-labelledby="modal-title" class="modal"><header class="modal__header"><h2 id="modal-title" class="modal__title">Редагувати агента — Diana Oliinyk</h2> <button aria-label="Закрити" class="modal__close"><svg width="20" height="20" viewBox="0 0 20 20" fill="none"><path d="M5 5l10 10M15 5L5 15" stroke="currentColor" stroke-width="1.6" stroke-linecap="round"></path></svg></button></header> <nav role="tablist" class="tabs"><button role="tab" class="tab tab--active">Налаштування</button><button role="tab" class="tab">Навики</button><button role="tab" class="tab">Телефонія</button><button role="tab" class="tab">Пристрої</button></nav> <section aria-label="Статус агента" class="status-row"><div class="status-row__main"><span class="status-row__label">Статус</span> <span class="status-chip status-chip--active"><span class="status-chip__dot"></span>
+          Активний
+        </span></div> <div class="status-row__actions"><span class="tip-wrap"><button type="button" aria-label="Відправити лінк для зміни паролю" class="icon-btn icon-btn--info"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M2 6.5A2.5 2.5 0 0 1 4.5 4h11A2.5 2.5 0 0 1 18 6.5v7a2.5 2.5 0 0 1-2.5 2.5h-11A2.5 2.5 0 0 1 2 13.5v-7Zm2.5-1.5a1.5 1.5 0 0 0-1.5 1.5v.32l7 3.86 7-3.86V6.5A1.5 1.5 0 0 0 15.5 5h-11ZM17 7.96l-6.76 3.72a.5.5 0 0 1-.48 0L3 7.96v5.54A1.5 1.5 0 0 0 4.5 15h11a1.5 1.5 0 0 0 1.5-1.5V7.96Z" fill="currentColor"></path></svg></button> <span role="tooltip" class="tip">Відправити лінк для зміни паролю</span></span> <span class="tip-wrap"><button type="button" aria-label="Заблокувати" class="icon-btn icon-btn--danger"><svg width="16" height="16" viewBox="0 0 20 20" fill="none" aria-hidden="true"><path d="M10 2a8 8 0 1 0 0 16 8 8 0 0 0 0-16Zm-7 8a7 7 0 0 1 12.02-4.87l-9.89 9.89A6.97 6.97 0 0 1 3 10Zm7 7a6.97 6.97 0 0 1-4.13-1.35l9.78-9.78A7 7 0 0 1 10 17Z" fill="currentColor"></path></svg></button> <span role="tooltip" class="tip">Заблокувати</span></span></div></section> <div><div class="form-group"><label for="login" class="form-group__label">Логін агента</label> <input id="login" disabled="disabled" class="input input--disabled"></div> <div class="form-group"><label for="email" class="form-group__label">Email</label> <input id="email" class="input"></div> <div class="form-group"><label for="name" class="form-group__label">Ім'я агента</label> <input id="name" class="input"></div> <div class="form-group"><label for="display" class="form-group__label">Ім'я, яке відображатиметься</label> <input id="display" class="input"></div> <div class="form-group"><label for="provider" class="form-group__label">Провайдер</label> <div class="select-wrap"><select id="provider" class="select"><option>ldap</option><option>local</option><option>oauth</option></select></div></div> <div class="form-group"><label for="role" class="form-group__label">Роль агента</label> <div class="select-wrap"><select id="role" class="select"><option>administrator</option><option>supervisor</option><option>agent</option></select></div></div> <div class="form-group"><label for="avail" class="form-group__label">Доступність</label> <div class="select-wrap"><select id="avail" disabled="disabled" class="select select--disabled"><option>Офлайн</option></select></div></div> <footer class="modal__footer"><button class="btn-primary">Редагувати агента</button> <button class="btn-link">Скасувати</button></footer></div></div> <div class="toast-wrap"></div></div>
+
+<script>
+// Vue 2 — Options API (production-ready shape)
+new Vue({
+  el: '#app',
+  data() {
+    return {
+      activeTab: 'Налаштування',
+      tabs: ['Налаштування', 'Навики', 'Телефонія', 'Пристрої'],
+
+      // status code: 'inactive' | 'active' | 'blocked' | 'needs_password'
+      status: 'active',
+
+      resending: false,
+      toasts: [],
+      nextToastId: 0,
+
+      agent: {
+        login: 'diana.oliinyk@novait.local',
+        email: 'diana.oliinyk@novait.com.ua',
+        name: 'Diana Oliinyk',
+        displayName: 'Diana Oliinyk',
+        provider: 'ldap',
+        role: 'administrator',
+      },
+
+      allStatuses: [
+        { code:'inactive',       label:'Не активований',         dotColor:'#f59e0b' },
+        { code:'active',         label:'Активний',               dotColor:'#16a34a' },
+        { code:'blocked',        label:'Заблокований',           dotColor:'#dc2626' },
+        { code:'needs_password', label:'Потребує зміни пароля',  dotColor:'#ca8a04' },
+      ],
+    };
+  },
+  computed: {
+    currentStatus() {
+      const map = {
+        inactive:       { label: 'Не активований',        chipClass: 'status-chip--pending'  },
+        active:         { label: 'Активний',              chipClass: 'status-chip--active'   },
+        blocked:        { label: 'Заблокований',          chipClass: 'status-chip--blocked'  },
+        needs_password: { label: 'Потребує зміни пароля', chipClass: 'status-chip--password' },
+      };
+      return map[this.status];
+    },
+    canResendEmail() {
+      // Hidden only when blocked
+      return this.status !== 'blocked';
+    },
+    resendTooltip() {
+      if (this.resending) return 'Надсилаємо…';
+      return this.status === 'inactive'
+        ? 'Відправити лінк для встановлення паролю'
+        : 'Відправити лінк для зміни паролю';
+    },
+  },
+  methods: {
+    setStatus(code) { this.status = code; },
+
+    block() {
+      this.status = 'blocked';
+      this.pushToast('Агента заблоковано', 'success');
+    },
+    unblock() {
+      this.status = 'active';
+      this.pushToast('Агента розблоковано', 'success');
+    },
+    resendEmail() {
+      if (this.resending) return;
+      this.resending = true;
+      setTimeout(() => {
+        this.resending = false;
+        this.pushToast('Лист надіслано на ' + this.agent.email, 'info');
+      }, 900);
+    },
+
+    onSave()  { this.pushToast('Зміни збережено', 'success'); },
+    onCancel(){ this.pushToast('Скасовано', 'info'); },
+
+    pushToast(text, kind) {
+      const id = ++this.nextToastId;
+      this.toasts.push({ id, text, kind: kind || 'info' });
+      setTimeout(() => {
+        this.toasts = this.toasts.filter(t => t.id !== id);
+      }, 2000);
+    },
+  },
+});
+</script>
+
+
+</body></html>
